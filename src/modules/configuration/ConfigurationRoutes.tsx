@@ -27,7 +27,7 @@ const ConfigurationRoutes = (): ReactElement => {
         element={<ComplexConfiguration/>}
       />
       <Route
-        path={Constants.Routes.Configuration.ComplexConfiguration}
+        path={Constants.Routes.Configuration.TemplatedConfiguration}
         element={<TemplatedConfiguration/>}
       />
     </Routes>

@@ -25,7 +25,7 @@ export const getNavbarProps = (token: string | undefined, t: TFunction<string, s
     icon: '',
     text: t('navbar.items.complexConfiguration')
   },{
-    url: `${Constants.Routes.Configuration.MODULE}/${Constants.Routes.Configuration.templatedConfiguration}`,
+    url: `${Constants.Routes.Configuration.MODULE}/${Constants.Routes.Configuration.TemplatedConfiguration}`,
     icon: '',
     text: t('navbar.items.templatedConfiguration')
   });

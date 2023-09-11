@@ -216,8 +216,6 @@ export const buildUiSchemaFormSwagger = <T = any, S extends StrictRJSFSchema = R
       uiSchema[key]['ui:field'] = 'widget';
 
       uiSchema[key] = Object.assign(uiSchema[key], buildUiSchemaFormSwagger(properties[key], {}, customRows, level + 1));
-
-      uiSchema[key]['custom:col-width'] = 12;
     } else {
       uiSchema[key]['custom:col-width'] = 3;
     }

@@ -41,7 +41,7 @@ const ComplexConfiguration = () => {
       if (!cleanup.didCancel && programSwaggerJson) {
         const schema = buildSchemaFromSwagger(
           programSwaggerJson.components.schemas, 
-          { swaggerKey: 'CreateProgramWithSections', propertyName: "program" },
+          { swaggerKey: 'CreateProgramWithSections', propertyName: 'program' },
           [],
           true
         );
