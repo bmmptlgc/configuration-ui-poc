@@ -1,0 +1,14 @@
+{
+  "demo": {
+    "mockApiBaseUrl": "http://127.0.0.1:3010/demo"
+  },
+  "localization": {
+    "debug": false
+  },
+  "api": {
+    "authorization": {
+      "baseUrl": "http://127.0.0.1:3010",
+      "refreshInterval": 3600000
+    }
+  }
+}

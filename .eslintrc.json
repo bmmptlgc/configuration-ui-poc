@@ -1,0 +1,36 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended"
+    ],
+    "plugins": [
+        "@typescript-eslint",
+        "react",
+        "react-hooks"
+    ],
+    "env": {
+        "browser": true,
+        "jest": true,
+        "es6": true
+    },
+    "rules": {
+        "max-len": ["error", { "code": 120 }],
+        "quotes": [2, "single", { "avoidEscape": true }],
+        "object-curly-spacing": ["error", "always"],
+        "array-bracket-spacing": ["error", "never"],
+        "react/jsx-uses-react": "error",
+        "react/prop-types": [2, { "ignore": ["children"] }],
+        "react-hooks/rules-of-hooks": "error",
+        "react/jsx-tag-spacing": ["error", { "beforeSelfClosing": "always" }],
+        "react/react-in-jsx-scope": "off"
+    },
+    "settings": {
+        "react": {
+            "pragma": "React",
+            "version": "detect"
+        }
+    },
+    "parser": "@typescript-eslint/parser"
+}

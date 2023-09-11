@@ -1,0 +1,14 @@
+.react-datepicker__close-icon {
+    display: block !important;
+}
+
+.react-datepicker__close-icon::after {
+    line-height: 0.75 !important;
+    color: black !important;
+    background-color: transparent !important;
+    font-size: 16px !important;
+}
+
+.react-datepicker__input-container > input[type=text]::-ms-clear {
+    display: none;
+}

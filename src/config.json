@@ -1,0 +1,25 @@
+{
+  "localization": {
+    "debug": true
+  },
+  "api": {
+    "someApi": {
+      "baseUrl": "http://127.0.0.1:3010",
+      "refreshInterval": 3600000
+    },
+    "program": {
+      "swaggerUrl": "https://localhost:8239/swagger/v1/swagger.json",
+      "baseUrl": "http://127.0.0.1:3010",
+      "refreshInterval": 3600000
+    }
+  },
+  "ui": {
+    "responsive": {
+      "breakpoints": {
+        "small": 768,
+        "large": 1260
+      }
+    }
+  },
+  "cacheTimeout": 7000
+}

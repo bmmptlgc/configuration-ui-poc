@@ -1,0 +1,8 @@
+{
+  "navbar": {
+    "items": {
+      "programConfiguration": "Programs",
+      "complexConfiguration": "Complex Config"
+    }
+  }
+}

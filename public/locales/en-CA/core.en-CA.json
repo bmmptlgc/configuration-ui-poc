@@ -1,0 +1,30 @@
+{
+  "configurationUi": "Configuration UI",
+  "authentication": {
+    "unauthorized": "You are not authorized!"
+  },
+  "modal": {
+    "defaultError": {
+      "title": "An error occurred",
+      "message": "Please refresh the page and try again. If you continue to have problems please contact customer support at 1-800-668-8768."
+    }
+  },
+  "api": {
+    "errors": {
+      "400": "Bad Request",
+      "401": "Unauthorized",
+      "403": "User is Forbidden",
+      "404": "Account not found",
+      "409": "An account with this email address already exists",
+      "500": "Internal Server Error",
+      "default": "$t(modal.defaultError.message)"
+    }
+  },
+  "form": {
+    "validation": {
+      "requiredField": "This field is required",
+      "invalidEmail": "This is not a valid email",
+      "invalidPassword": "At least 6 characters long, 1 uppercase letter, 1 lowercase letter, 1 number"
+    }
+  }
+}
