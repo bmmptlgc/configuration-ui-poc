@@ -34,24 +34,26 @@ export const convertEntityToEnum = <T, K extends keyof T>(entity: T[], enumKey: 
 
 export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
   swaggerSchemas: any,
-  schemaKey: string,
+  schemaKeys: { swaggerKey: string, propertyName: string },
   rootRequiredWidgets: string[],
   isRoot?: boolean
 ): S => {
-  const schema: S = {
-    // properties: {}
-  } as S;
+  const { propertyName } = schemaKeys;
 
-  if (schema.enum) {
+  const swaggerSchema = swaggerSchemas[schemaKeys.swaggerKey];
+  
+  if (swaggerSchema.enum) {
     return {
-      type: schema.type,
-      enum: schema.enum
+      type: swaggerSchema.type,
+      enum: swaggerSchema.enum
     } as S;
   }
+
+  const schema: S = {} as S;
   
   const required: string[] = [];
 
-  const properties = { ...swaggerSchemas[schemaKey].properties };
+  const properties = { ...swaggerSchema.properties };
   
   Object.keys(properties).forEach((key: string) => {
     const property = { ...properties[key] as JSONSchema7 & {
@@ -68,11 +70,15 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
     
     if (ref) {
       properties[key] = buildSchemaFromSwagger(
-        { ...swaggerSchemas },
-        ref.split('/').pop() as string,
+        swaggerSchemas,
+        { swaggerKey: ref.split('/').pop() as string, propertyName: key},
         rootRequiredWidgets
       );
 
+      if (properties[key].properties) {
+        properties[key].type = 'object';
+      }
+      
       if ((properties as JSONSchema7).required) {
         rootRequiredWidgets.push(key);
       }
@@ -82,8 +88,8 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
         
         if (items.$ref) {
           (properties[key] as JSONSchema7).items = buildSchemaFromSwagger(
-            { ...swaggerSchemas },
-            items.$ref.split('/').pop() as string,
+            swaggerSchemas,
+            { swaggerKey: items.$ref.split('/').pop() as string, propertyName: key},
             rootRequiredWidgets
           );
         } else if (!(items as JSONSchema7).properties && (items as JSONSchema7).format === 'uuid') {
@@ -99,25 +105,30 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
           (properties[key] as JSONSchema7).minItems = 1;
         }
       } else {
+        properties[key] = { ...property };
+        
         if (!property.type) {
           (properties[key] as JSONSchema7).type = 'string';
         } else if (property.type === 'boolean') {
           (properties[key] as JSONSchema7).default = false;
         }
         
+        // Root level properties that are not a reference to another swagger schema need to be grouped into a top lever
+        // property that will get the name of the schemaKey, thus creating a distinct and titled form section for the
+        // group 
         if (isRoot) {
-          if (!hasOwnProperty(properties, schemaKey)) {
-            (properties as { [key: string]: JSONSchema7 })[schemaKey] = {
+          if (!hasOwnProperty(properties, propertyName)) {
+            (properties as { [key: string]: JSONSchema7 })[propertyName] = {
               type: 'object',
               properties: {
                 [key]: properties[key]
               }
             }
           } else {
-            (properties[schemaKey] as JSONSchema7).properties![key] = properties[key];
+            (properties[propertyName] as JSONSchema7).properties![key] = properties[key];
           }
 
-          let propertySchema = properties[schemaKey] as JSONSchema7;
+          let propertySchema = properties[propertyName] as JSONSchema7;
           
           if (!property.nullable) {
             if (propertySchema.required) {
@@ -125,15 +136,13 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
             } else {
               propertySchema.required = [key];
             }
-
-            if (!schema.required) {
-              schema.required = [schemaKey];
-            } else if (!schema.required.includes(schemaKey)) {
-              schema.required.push(schemaKey);
-            }
           }
           
           delete properties[key];
+        }
+
+        if (!property.nullable && !rootRequiredWidgets.includes(propertyName)) {
+          rootRequiredWidgets.push(propertyName);
         }
       }
     }
@@ -166,7 +175,7 @@ export const buildUiSchemaFormSwagger = <T = any, S extends StrictRJSFSchema = R
 
   customRows[level] = [[]];
   
-  const properties = schema.properties || schema.items.properties;
+  const properties = schema.properties || schema.items?.properties;
 
   if (!properties) {
     return {};
@@ -207,6 +216,8 @@ export const buildUiSchemaFormSwagger = <T = any, S extends StrictRJSFSchema = R
       uiSchema[key]['ui:field'] = 'widget';
 
       uiSchema[key] = Object.assign(uiSchema[key], buildUiSchemaFormSwagger(properties[key], {}, customRows, level + 1));
+
+      uiSchema[key]['custom:col-width'] = 12;
     } else {
       uiSchema[key]['custom:col-width'] = 3;
     }

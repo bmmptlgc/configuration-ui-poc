@@ -72,7 +72,9 @@ export default class SchemaForm<T = any, S extends StrictRJSFSchema = RJSFSchema
 
     this.setState(prevState => ({
       ...prevState,
-      ...rowified,
+      schema: rowified.schema,
+      uiSchema: orderRootProperties(rowified.uiSchema),
+      formData: rowified.formData,
       formContext: !nextProps.hasOwnProperty('readonly')
         ? prevState.formContext
         : update(prevState.formContext, {

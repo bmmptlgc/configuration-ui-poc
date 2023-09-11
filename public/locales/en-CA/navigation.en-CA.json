@@ -2,7 +2,8 @@
   "navbar": {
     "items": {
       "programConfiguration": "Programs",
-      "complexConfiguration": "Complex Config"
+      "complexConfiguration": "Complex Config",
+      "templatedConfiguration": "Templated Config"
     }
   }
 }

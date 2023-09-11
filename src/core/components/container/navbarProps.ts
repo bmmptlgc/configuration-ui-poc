@@ -24,6 +24,10 @@ export const getNavbarProps = (token: string | undefined, t: TFunction<string, s
     url: `${Constants.Routes.Configuration.MODULE}/${Constants.Routes.Configuration.ComplexConfiguration}`,
     icon: '',
     text: t('navbar.items.complexConfiguration')
+  },{
+    url: `${Constants.Routes.Configuration.MODULE}/${Constants.Routes.Configuration.templatedConfiguration}`,
+    icon: '',
+    text: t('navbar.items.templatedConfiguration')
   });
 
   // dropdowns.push({

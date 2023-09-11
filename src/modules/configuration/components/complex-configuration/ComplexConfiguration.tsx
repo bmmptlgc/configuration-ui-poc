@@ -19,9 +19,9 @@ const ComplexConfiguration = () => {
     },
     uiSchema: {
       'ui:order': [
-        'CreateProgramWithSections', '*'
+        'program', '*'
       ],
-      CreateProgramWithSections: {
+      program: {
         'ui:title': 'Program'
       }
     }
@@ -39,11 +39,12 @@ const ComplexConfiguration = () => {
   useCancelableEffect(
     (cleanup: { didCancel: boolean }): void => {
       if (!cleanup.didCancel && programSwaggerJson) {
-        const schema = buildSchemaFromSwagger(programSwaggerJson.components.schemas, 'CreateProgramWithSections', [], true);
-
-        // Object.keys(schema.properties!).forEach(k => {
-        //   if (k !== 'consultationConfiguration') delete schema.properties![k];
-        // });
+        const schema = buildSchemaFromSwagger(
+          programSwaggerJson.components.schemas, 
+          { swaggerKey: 'CreateProgramWithSections', propertyName: "program" },
+          [],
+          true
+        );
         
         const uiSchema = buildUiSchemaFormSwagger(schema, formSchemaApi.uiSchema);
         

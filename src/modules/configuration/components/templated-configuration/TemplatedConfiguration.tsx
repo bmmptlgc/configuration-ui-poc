@@ -19,9 +19,9 @@ const TemplatedConfiguration = () => {
     },
     uiSchema: {
       'ui:order': [
-        'CreateProgramWithSections', '*'
+        'program', '*'
       ],
-      CreateProgram: {
+      program: {
         'ui:title': 'Program'
       }
     }
@@ -39,7 +39,12 @@ const TemplatedConfiguration = () => {
   useCancelableEffect(
     (cleanup: { didCancel: boolean }): void => {
       if (!cleanup.didCancel && programSwaggerJson) {
-        const schema = buildSchemaFromSwagger(programSwaggerJson.components.schemas, 'CreateProgram', [], true);
+        const schema = buildSchemaFromSwagger(
+          programSwaggerJson.components.schemas,
+          { swaggerKey: 'CreateProgram', propertyName: "program" },
+          [], 
+          true
+        );
         
         const uiSchema = buildUiSchemaFormSwagger(schema, formSchemaApi.uiSchema);
         
