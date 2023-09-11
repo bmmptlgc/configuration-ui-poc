@@ -7,6 +7,29 @@ import SchemaForm from 'shared/components/schema-form/SchemaForm';
 import { programServiceApi } from 'services/program/programServiceApi';
 import { useCancelableEffect } from 'core/hooks/utils';
 import { buildSchemaFromSwagger, buildUiSchemaFormSwagger } from 'core/helpers/schemaForm';
+import { JSONSchema7 } from 'json-schema';
+
+const template: {
+  [key: string]: JSONSchema7;
+} = {
+  // details: {
+  //   type: 'object',
+  //   properties: {
+  //     name: {
+  //       default: 'optum X',
+  //       readOnly: true
+  //     },
+  //     resellerId: {
+  //       default: 'should this be defaulted',
+  //       readOnly: true
+  //     },
+  //     status: {
+  //       enum: [ 'Draft', 'Started', 'Ended'],
+  //       default: 'Draft'
+  //     }
+  //   }
+  // }
+}
 
 const ComplexConfiguration = () => {
 
@@ -40,10 +63,11 @@ const ComplexConfiguration = () => {
     (cleanup: { didCancel: boolean }): void => {
       if (!cleanup.didCancel && programSwaggerJson) {
         const schema = buildSchemaFromSwagger(
-          programSwaggerJson.components.schemas, 
+          programSwaggerJson.components.schemas,
           { swaggerKey: 'CreateProgramWithSections', propertyName: 'program' },
-          [],
-          true
+          [], 
+          true,
+          template
         );
         
         const uiSchema = buildUiSchemaFormSwagger(schema, formSchemaApi.uiSchema);

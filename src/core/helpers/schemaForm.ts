@@ -3,7 +3,7 @@ import { TFunction } from 'i18next';
 import { CustomValidationMessages, EnumData } from 'shared/components/schema-form';
 import { UiSchema } from '@rjsf/utils';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils/src/types';
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 import { hasOwnProperty } from 'core/helpers/utils';
 
 
@@ -64,9 +64,10 @@ const AddRootPropertyToWidget = (
 
 export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
   swaggerSchemas: any,
-  schemaKeys: { swaggerKey: string, propertyName: string },
+  schemaKeys: { swaggerKey: string; propertyName: string },
   rootRequiredWidgets: string[],
-  isRoot?: boolean
+  isRoot: boolean,
+  template?: { [key: string]: JSONSchema7 }
 ): S => {
   const { propertyName } = schemaKeys;
 
@@ -86,27 +87,40 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
   const properties = { ...swaggerSchema.properties };
   
   Object.keys(properties).forEach((key: string) => {
-    const property = { ...properties[key] as JSONSchema7 & {
+    let property = { ...properties[key] as JSONSchema7 & {
         nullable?: boolean;
         $ref: string
       }
     };
     
+    const ref = property.$ref;
+    
+    if (!ref && template && template[isRoot ? propertyName : key] && (!isRoot || template[propertyName].properties
+      && template[propertyName].properties![key])) {
+      property = Object.assign(property, isRoot ? template[propertyName].properties![key] : template[key]);
+    }
+    
     if (!property.nullable && !isRoot) {
       required.push(key);
     }
     
-    const ref = property.$ref;
-    
     if (ref) {
       properties[key] = buildSchemaFromSwagger(
-        swaggerSchemas,
-        { swaggerKey: ref.split('/').pop() as string, propertyName: key},
-        rootRequiredWidgets
+        swaggerSchemas, 
+        { swaggerKey: ref.split('/').pop() as string, propertyName: key },
+        rootRequiredWidgets,
+        false,
+        template && template[key] && template[key].properties as { [key: string]: JSONSchema7 } || undefined
+        // template && template[propertyName] && template[propertyName].properties as { [key: string]: JSONSchema7 } || undefined
       );
 
       if (properties[key].properties) {
         properties[key].type = 'object';
+      }
+
+      if (properties[key].enum && template && template[propertyName] && template[propertyName].properties
+        && template[propertyName].properties![key]) {
+        properties[key] = Object.assign(properties[key], template[propertyName].properties![key]);
       }
       
       if (isRoot && properties[key].enum) {
@@ -122,9 +136,11 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
         
         if (items.$ref) {
           (properties[key] as JSONSchema7).items = buildSchemaFromSwagger(
-            swaggerSchemas,
-            { swaggerKey: items.$ref.split('/').pop() as string, propertyName: key},
-            rootRequiredWidgets
+            swaggerSchemas, 
+            { swaggerKey: items.$ref.split('/').pop() as string, propertyName: key },
+            rootRequiredWidgets, 
+            false,
+            template
           );
         } else if (!(items as JSONSchema7).properties && (items as JSONSchema7).format === 'uuid') {
           (properties[key] as JSONSchema7).items = {

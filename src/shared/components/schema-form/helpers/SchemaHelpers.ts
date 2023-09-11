@@ -105,8 +105,14 @@ export const rowify = <T>(
 
         dataRow[val as string] = arrayItems;
       } else {
-        dataRow[val as string] = flatData ? (flatData as T)[val as keyof T] as T[] : undefined;
+        dataRow[val as string] = flatData
+          ? (flatData as T)[val as keyof T] as T[keyof T]
+          : undefined;
 
+        if (dataRow[val as string] === undefined) {
+          dataRow[val as string] = flatSchema.properties && (flatSchema.properties[val as string] as JSONSchema7).default as T[keyof T];
+        }
+        
         if (row.properties) {
           row.properties[val as string] = Object
             .assign({}, flatSchema.properties && flatSchema.properties[val as string]);

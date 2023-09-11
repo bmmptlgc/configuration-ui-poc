@@ -19,7 +19,7 @@ const ProgramConfiguration = () => {
     },
     uiSchema: {
       'ui:order': [
-        'program', '*'
+        '*'
       ],
       program: {
         'ui:title': 'Program'
@@ -40,9 +40,9 @@ const ProgramConfiguration = () => {
     (cleanup: { didCancel: boolean }): void => {
       if (!cleanup.didCancel && programSwaggerJson) {
         const schema = buildSchemaFromSwagger(
-          programSwaggerJson.components.schemas,
+          programSwaggerJson.components.schemas, 
           { swaggerKey: 'CreateProgram', propertyName: 'program' },
-          [], 
+          [],
           true
         );
         

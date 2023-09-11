@@ -7,6 +7,29 @@ import SchemaForm from 'shared/components/schema-form/SchemaForm';
 import { programServiceApi } from 'services/program/programServiceApi';
 import { useCancelableEffect } from 'core/hooks/utils';
 import { buildSchemaFromSwagger, buildUiSchemaFormSwagger } from 'core/helpers/schemaForm';
+import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+
+const template: {
+  [key: string]: JSONSchema7;
+} = {
+  program: {
+    type: 'object',
+    properties: {
+      name: {
+        default: 'optum X',
+        readOnly: true
+      },
+      resellerId: {
+        default: 'should this be defaulted',
+        readOnly: true
+      },
+      status: {
+        enum: [ 'Draft', 'Started', 'Ended'],
+        default: 'Draft'
+      }
+    }
+  }
+}
 
 const TemplatedConfiguration = () => {
 
@@ -43,7 +66,8 @@ const TemplatedConfiguration = () => {
           programSwaggerJson.components.schemas,
           { swaggerKey: 'ProgramDetails', propertyName: 'program' },
           [], 
-          true
+          true,
+          template
         );
         
         const uiSchema = buildUiSchemaFormSwagger(schema, formSchemaApi.uiSchema);
