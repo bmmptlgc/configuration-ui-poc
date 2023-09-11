@@ -32,6 +32,36 @@ export const convertEntityToEnum = <T, K extends keyof T>(entity: T[], enumKey: 
   return enumData;
 };
 
+const AddRootPropertyToWidget = (
+  properties: { [key: string]: JSONSchema7 & { nullable?: boolean; $ref: string }},
+  propertyName: string,
+  key: string,
+  property: JSONSchema7 & { nullable?: boolean; $ref: string }
+) => {
+  if (!hasOwnProperty(properties, propertyName)) {
+    (properties as { [key: string]: JSONSchema7 })[propertyName] = {
+      type: 'object',
+      properties: {
+        [key]: properties[key]
+      }
+    }
+  } else {
+    (properties[propertyName] as JSONSchema7).properties![key] = properties[key];
+  }
+
+  let propertySchema = properties[propertyName] as JSONSchema7;
+
+  if (!property.nullable) {
+    if (propertySchema.required) {
+      propertySchema.required.push(key);
+    } else {
+      propertySchema.required = [key];
+    }
+  }
+
+  delete properties[key];
+}
+
 export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
   swaggerSchemas: any,
   schemaKeys: { swaggerKey: string, propertyName: string },
@@ -79,6 +109,10 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
         properties[key].type = 'object';
       }
       
+      if (isRoot && properties[key].enum) {
+        AddRootPropertyToWidget(properties, propertyName, key, property);
+      }
+      
       if ((properties as JSONSchema7).required) {
         rootRequiredWidgets.push(key);
       }
@@ -117,28 +151,7 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
         // property that will get the name of the schemaKey, thus creating a distinct and titled form section for the
         // group 
         if (isRoot) {
-          if (!hasOwnProperty(properties, propertyName)) {
-            (properties as { [key: string]: JSONSchema7 })[propertyName] = {
-              type: 'object',
-              properties: {
-                [key]: properties[key]
-              }
-            }
-          } else {
-            (properties[propertyName] as JSONSchema7).properties![key] = properties[key];
-          }
-
-          let propertySchema = properties[propertyName] as JSONSchema7;
-          
-          if (!property.nullable) {
-            if (propertySchema.required) {
-              propertySchema.required.push(key);
-            } else {
-              propertySchema.required = [key];
-            }
-          }
-          
-          delete properties[key];
+          AddRootPropertyToWidget(properties, propertyName, key, property);
         }
 
         if (!property.nullable && !rootRequiredWidgets.includes(propertyName)) {
