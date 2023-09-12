@@ -8,27 +8,37 @@ import { programServiceApi } from 'services/program/programServiceApi';
 import { useCancelableEffect } from 'core/hooks/utils';
 import { buildSchemaFromSwagger, buildUiSchemaFormSwagger } from 'core/helpers/schemaForm';
 import { JSONSchema7 } from 'json-schema';
+import { useStateApi } from 'core/hooks/state';
 
 const template: {
   [key: string]: JSONSchema7;
 } = {
-  // details: {
-  //   type: 'object',
-  //   properties: {
-  //     name: {
-  //       default: 'optum X',
-  //       readOnly: true
-  //     },
-  //     resellerId: {
-  //       default: 'should this be defaulted',
-  //       readOnly: true
-  //     },
-  //     status: {
-  //       enum: [ 'Draft', 'Started', 'Ended'],
-  //       default: 'Draft'
-  //     }
-  //   }
-  // }
+  details: {
+    type: 'object',
+    properties: {
+      name: {
+        default: 'optum X',
+        readOnly: true
+      },
+      resellerId: {
+        default: 'should this be defaulted',
+        readOnly: true
+      },
+      status: {
+        enum: [ 'Draft', 'Started', 'Ended'],
+        default: 'Draft'
+      }
+    }
+  },
+  targetAudienceConfiguration: {
+    type: 'object',
+    properties: {
+      geography: {
+        default: 'EU West',
+        readOnly: true
+      }
+    }
+  }
 }
 
 const ComplexConfiguration = () => {

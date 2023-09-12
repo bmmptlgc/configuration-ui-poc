@@ -64,7 +64,7 @@ const TemplatedConfiguration = () => {
       if (!cleanup.didCancel && programSwaggerJson) {
         const schema = buildSchemaFromSwagger(
           programSwaggerJson.components.schemas,
-          { swaggerKey: 'CreateProgram', propertyName: 'program' },
+          { swaggerKey: 'ProgramDetails', propertyName: 'program' },
           [], 
           true,
           template

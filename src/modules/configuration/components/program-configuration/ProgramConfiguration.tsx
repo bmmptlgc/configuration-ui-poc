@@ -9,9 +9,19 @@ import { useCancelableEffect } from 'core/hooks/utils';
 import { buildSchemaFromSwagger, buildUiSchemaFormSwagger } from 'core/helpers/schemaForm';
 
 const ProgramConfiguration = () => {
-
   const formSchemaApi = useFormSchema<{}, any>({
-    formData: {},
+    formData: {
+      "user": {
+        "isB2BAdministrator": false,
+        "userId": "21ecc90f-420e-4455-a906-481b0fdcde91"
+      },
+      "program": {
+        "resellerId": "21ecc90f-420e-4455-a906-481b0fdcde91",
+        "startDate": "2023-09-12T10:57:00.000Z",
+        "programId": "21ecc90f-420e-4455-a906-481b0fdcde91",
+        "expectedVersion": 1
+      }
+    },
     schema: {
       type: 'object',
       required: [],
@@ -25,7 +35,7 @@ const ProgramConfiguration = () => {
         'ui:title': 'Program',
         endDate: {
           'ui:widget': 'CustomDatePicker'
-        },
+        }
       }
     }
   });
@@ -73,7 +83,7 @@ const ProgramConfiguration = () => {
               btnText="Next Step"
               isBtnLarge={false}
             // validate={onValidate}
-            // onSubmit={onSubmit}
+              onSubmit={(formData) => console.log(formData)}
               customValidationMessages={formSchemaApi.validationMessages}
               validator={validator}
           />

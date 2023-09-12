@@ -248,6 +248,10 @@ export const buildUiSchemaFormSwagger = <T = any, S extends StrictRJSFSchema = R
       uiSchema[key] = Object.assign(uiSchema[key], buildUiSchemaFormSwagger(properties[key], uiSchema[key], customRows, level + 1));
     } else {
       uiSchema[key]['custom:col-width'] = 3;
+      
+      if (properties[key].format === 'date-time') {
+        uiSchema[key]['ui:widget'] = 'CustomDatePicker';
+      }
     }
   });
 
