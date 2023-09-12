@@ -67,14 +67,9 @@ export default class SchemaForm<T = any, S extends StrictRJSFSchema = RJSFSchema
     this.onFocus = this.onFocus.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: SchemaFormProps<T>) {
-    let rowified = rowify(nextProps.schema, nextProps.uiSchema || {}, nextProps.formData);
-
-    this.setState(prevState => ({
+  static getDerivedStateFromProps<T>(nextProps: SchemaFormProps<T>, prevState: SchemaFormState<T>) {
+    return {
       ...prevState,
-      schema: rowified.schema,
-      uiSchema: orderRootProperties(rowified.uiSchema),
-      formData: rowified.formData,
       formContext: !nextProps.hasOwnProperty('readonly')
         ? prevState.formContext
         : update(prevState.formContext, {
@@ -82,9 +77,9 @@ export default class SchemaForm<T = any, S extends StrictRJSFSchema = RJSFSchema
             $set: nextProps.readonly
           }
         })
-    }));
+    };
   }
-
+  
   componentDidMount() {
     const {hideValidationMessages = false} = {...getUiOptions(this.props.uiSchema || {})};
 
