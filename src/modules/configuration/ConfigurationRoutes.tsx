@@ -10,6 +10,8 @@ const ComplexConfiguration =
   lazy(() => import('./components/complex-configuration/ComplexConfiguration'));
 const TemplatedConfiguration =
   lazy(() => import('./components/templated-configuration/TemplatedConfiguration'));
+const JsonSchemaConfiguration =
+  lazy(() => import('./components/json-schema-configuration/JsonSchemaConfiguration'));
 
 const ConfigurationRoutes = (): ReactElement => {
   return (
@@ -29,6 +31,10 @@ const ConfigurationRoutes = (): ReactElement => {
       <Route
         path={Constants.Routes.Configuration.TemplatedConfiguration}
         element={<TemplatedConfiguration/>}
+      />
+      <Route
+        path={Constants.Routes.Configuration.JsonSchemaConfiguration}
+        element={<JsonSchemaConfiguration/>}
       />
     </Routes>
   );

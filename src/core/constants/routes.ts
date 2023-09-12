@@ -3,7 +3,8 @@ const Routes = {
     MODULE: 'configuration',
     ProgramConfiguration: 'program-configuration',
     ComplexConfiguration: 'complex-configuration',
-    TemplatedConfiguration: 'templated-configuration'
+    TemplatedConfiguration: 'templated-configuration',
+    JsonSchemaConfiguration: 'json-schema-configuration'
   }
 };
 

@@ -3,7 +3,8 @@
     "items": {
       "programConfiguration": "Programs",
       "complexConfiguration": "Complex Config",
-      "templatedConfiguration": "Templated Config"
+      "templatedConfiguration": "Templated Config",
+      "jsonSchemaConfiguration": "Json Schema Config"
     }
   }
 }

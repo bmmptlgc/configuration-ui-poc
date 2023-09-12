@@ -22,7 +22,10 @@ const ProgramConfiguration = () => {
         '*'
       ],
       program: {
-        'ui:title': 'Program'
+        'ui:title': 'Program',
+        endDate: {
+          'ui:widget': 'CustomDatePicker'
+        },
       }
     }
   });
