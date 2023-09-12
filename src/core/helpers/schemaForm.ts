@@ -3,9 +3,8 @@ import { TFunction } from 'i18next';
 import { CustomValidationMessages, EnumData } from 'shared/components/schema-form';
 import { UiSchema } from '@rjsf/utils';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils/src/types';
-import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 import { hasOwnProperty } from 'core/helpers/utils';
-
 
 export const getValidationMessages = (t: TFunction): CustomValidationMessages => ({
   required: t('form.validation.requiredField'),
@@ -156,6 +155,8 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
         }
       } else {
         properties[key] = { ...property };
+
+        delete properties[key].nullable;
         
         if (!property.type) {
           (properties[key] as JSONSchema7).type = 'string';
@@ -176,7 +177,7 @@ export const buildSchemaFromSwagger = <S extends StrictRJSFSchema = RJSFSchema>(
       }
     }
 
-    delete property.nullable;
+    // delete property.nullable;
   });
   
   schema.properties = properties;
@@ -198,7 +199,7 @@ export const buildUiSchemaFormSwagger = <T = any, S extends StrictRJSFSchema = R
   customRows: { [level: number]: [string[]] } = {},
   level: number = 0
 ): UiSchema<T, S, F> => {
-  const uiSchema: UiSchema<T, S, F> = level === 0
+  let uiSchema: UiSchema<T, S, F> = originalSchema
     ? { ...originalSchema }
     : {};
 
@@ -244,7 +245,7 @@ export const buildUiSchemaFormSwagger = <T = any, S extends StrictRJSFSchema = R
     if (['object', 'array'].includes(properties[key].type)) {
       uiSchema[key]['ui:field'] = 'widget';
 
-      uiSchema[key] = Object.assign(uiSchema[key], buildUiSchemaFormSwagger(properties[key], {}, customRows, level + 1));
+      uiSchema[key] = Object.assign(uiSchema[key], buildUiSchemaFormSwagger(properties[key], uiSchema[key], customRows, level + 1));
     } else {
       uiSchema[key]['custom:col-width'] = 3;
     }

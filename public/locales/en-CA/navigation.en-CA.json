@@ -1,10 +1,10 @@
 {
   "navbar": {
     "items": {
-      "programConfiguration": "Programs",
-      "complexConfiguration": "Complex Config",
-      "templatedConfiguration": "Templated Config",
-      "jsonSchemaConfiguration": "Json Schema Config"
+      "programConfiguration": "Swagger Programs",
+      "complexConfiguration": "Complex Programs",
+      "templatedConfiguration": "Templated Programs",
+      "jsonSchemaConfiguration": "Json Schema Programs"
     }
   }
 }

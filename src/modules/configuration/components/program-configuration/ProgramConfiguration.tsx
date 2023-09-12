@@ -19,7 +19,7 @@ const ProgramConfiguration = () => {
     },
     uiSchema: {
       'ui:order': [
-        '*'
+        'program', '*'
       ],
       program: {
         'ui:title': 'Program',

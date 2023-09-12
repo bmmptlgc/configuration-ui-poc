@@ -7,7 +7,7 @@ import SchemaForm from 'shared/components/schema-form/SchemaForm';
 import { programServiceApi } from 'services/program/programServiceApi';
 import { useCancelableEffect } from 'core/hooks/utils';
 import { buildSchemaFromSwagger, buildUiSchemaFormSwagger } from 'core/helpers/schemaForm';
-import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 
 const template: {
   [key: string]: JSONSchema7;
